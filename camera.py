@@ -1,6 +1,5 @@
 from picamera import PiCamera
 from time import sleep
-import s3_upload
 import datetime as dt
 import boto3
 
