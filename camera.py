@@ -11,6 +11,7 @@ s3 = boto3.client('s3')
 
 def upload_to_aws(local_file, bucket, s3_file):
 	s3.upload_file(local_file,bucket,s3_file)
+	sleep(1.5)
 	os.remove(local_file)
 
 def camera_record():
