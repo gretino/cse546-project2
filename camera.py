@@ -19,7 +19,7 @@ def camera_record():
 
 	s3_upload.upload_to_aws_s3('/home/pi/Desktop/filename','input-project2','filename')
 
-while true:
+while True:
 	camera_record()
 
 
