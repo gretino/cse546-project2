@@ -7,6 +7,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 s3 = boto3.client('s3')
+
+def upload_to_aws(local_file, bucket, s3_file):
+	s3.upload_file(local_file,bucket,s3_file)
+	os.remove(local_file)
+
 def camera_record():
 	camera = PiCamera()
 	filename = dt.datetime.now().strftime("%Y-%m-%d_%H.%M.%S.h264")
@@ -17,12 +22,8 @@ def camera_record():
 	camera.stop_recording()
 	camera.stop_preview()
 	camera.close()
-	s3.upload_file(filepath,'input-project2',filename)
+	t = threading.Thread(target = upload_to_aws, args=(filepath,'input-project2',filename)).start()
 
+	
 while True:
 	camera_record()
-
-
-
-
-
