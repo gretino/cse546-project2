@@ -4,6 +4,7 @@ import datetime as dt
 import os
 import boto3
 from dotenv import load_dotenv
+import threading
 load_dotenv()
 
 s3 = boto3.client('s3')
