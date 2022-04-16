@@ -14,7 +14,7 @@ def camera_record():
 	filename = dt.datetime.now().strftime("%Y-%m-%d_%H.%M.%S.h264")
 	camera.start_preview()
 	camera.start_recording('/home/pi/Desktop/filename')
-	sleep(0.5)
+	sleep(3)
 	camera.stop_recording()
 	camera.stop_preview()
 
