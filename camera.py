@@ -16,7 +16,7 @@ def camera_record():
 	sleep(0.5)
 	camera.stop_recording()
 	camera.stop_preview()
-    camera.close()
+	camera.close()
 	s3.upload_file(filepath,'input-project2',filename)
 
 while True:
