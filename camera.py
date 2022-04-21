@@ -16,7 +16,7 @@ def upload_to_aws(local_file, bucket, s3_file):
 
 def camera_record():
 	camera = PiCamera()
-	filename = dt.datetime.now().strftime("%Y-%m-%d_%H.%M.%S.h264")
+	filename = dt.datetime.now().strftime("%Y-%m-%d_%H.%M.%S.%f.h264")
 	filepath = f'/home/pi/Desktop/{filename}'
 	camera.start_preview()
 	camera.start_recording(filepath)
