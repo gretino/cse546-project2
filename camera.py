@@ -15,7 +15,7 @@ def upload_to_aws(local_file, bucket, s3_file):
 	os.rename(local_file, new_path)
 	s3.upload_file(new_path,bucket,new_name)
 	sleep(1.5)
-	os.remove(local_file)
+	os.remove(new_path)
 
 def camera_record():
 	camera = PiCamera()
