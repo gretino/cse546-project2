@@ -2,6 +2,9 @@ import boto3
 import time
 import datetime as dt
 import json
+from dotenv import load_dotenv
+load_dotenv()
+
 
 sqs_client = boto3.client("sqs", region_name="us-east-1")
 
@@ -20,7 +23,7 @@ def receive_message():
 		WaitTimeSeconds=2,)
 	for message in response.get("Messages", []):
 		message_body = message["Body"]
-		delete_message(message["ReceiptHandle"])
+		# delete_message(message["ReceiptHandle"])
 	return message_body
 
 print("Receiving SQS messages...")
@@ -29,11 +32,13 @@ while True:
 	if not json_data == '':
 		#print(json_data)
 		y = json.loads(json_data)
+		print('\n\n')
 		print(f'The person detected at {y["filename"]}: {y["name"]}, {y["major"]}, {y["year"]}')
 		start_time = y["filename"][:-5]
-		print(f'start_time: {start_time}')
+		print(f'start_time: {start_time}, {type(start_time)}')
 		time_format = time.strptime(start_time, '%Y-%m-%d_%H.%M.%S.%f')
-		#print(time_format)
-		print(f'Latency: {time.time()-time.mktime(time_format)} seconds')
+		print(f'time_format: {time_format}, {type(time_format)}')
+		print(f'Latency: {time.time()-time.mktime(time_format)} seconds.')
+		print('\n\n')
 	else:
 		print("Empty Queue...")
