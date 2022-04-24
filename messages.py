@@ -32,13 +32,15 @@ while True:
 	if not json_data == '':
 		#print(json_data)
 		y = json.loads(json_data)
-		print('\n\n')
 		print(f'The person detected at {y["filename"]}: {y["name"]}, {y["major"]}, {y["year"]}')
 		start_time = y["filename"][:-5]
 		print(f'start_time: {start_time}, {type(start_time)}')
 		time_format = time.strptime(start_time, '%Y-%m-%d_%H.%M.%S.%f')
-		print(f'time_format: {time_format}, {type(time_format)}')
-		print(f'Latency: {time.time()-time.mktime(time_format)} seconds.')
-		print('\n\n')
+		millis = float(start_time.split('.')[-1])
+		start_timestamp = time.mktime(time_format)+millis
+		current_timestamp = time.time()
+		print(start_time, start_timestamp, current_timestamp)
+		print(f'Latency: {current_timestamp-start_timestamp} seconds.')
+		print('\n')
 	else:
 		print("Empty Queue...")
