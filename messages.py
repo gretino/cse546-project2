@@ -36,11 +36,11 @@ while True:
 		start_time = y["filename"][:-5]
 		print(f'start_time: {start_time}, {type(start_time)}')
 		time_format = time.strptime(start_time, '%Y-%m-%d_%H.%M.%S.%f')
-		millis = float(start_time.split('.')[-1])
+		millis = float(f"0.{start_time.split('.')[-1]}")
 		start_timestamp = time.mktime(time_format)+millis
 		current_timestamp = time.time()
 		print(start_time, start_timestamp, current_timestamp)
-		print(f'Latency: {current_timestamp-start_timestamp} seconds.')
+		print(f'Latency: {"{:.2f}".format(current_timestamp-start_timestamp)} seconds.')
 		print('\n')
 	else:
 		print("Empty Queue...")
