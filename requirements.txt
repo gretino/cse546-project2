@@ -1,0 +1,15 @@
+dependencies==7.1.7
+matplotlib==3.5.1
+numpy==1.22.3
+Pillow==9.1.0
+requests==2.22.0
+tensorflow==2.8.0
+torch==1.10.2+cpu
+torchvision==0.11.3+cpu
+tqdm==4.64.0
+boto3
+dlib
+opencv-python
+ffmpeg
+botocore
+awslambdaric
