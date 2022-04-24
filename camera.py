@@ -20,7 +20,7 @@ def camera_record():
 	filepath = f'/home/pi/Desktop/{filename}'
 	camera.start_preview()
 	camera.start_recording(filepath)
-	sleep(0.5)
+	sleep(0.3)
 	camera.stop_recording()
 	camera.stop_preview()
 	camera.close()
