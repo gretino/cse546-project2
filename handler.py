@@ -19,12 +19,17 @@ import json
 import numpy as np
 #import argparse
 import build_custom_model
+from dotenv import load_dotenv
+load_dotenv()
 
 region = 'us-east-1'
 
 s3 = boto3.client('s3', region_name=region)
 
-sqs = boto3.resource('sqs')
+
+#sqs = boto3.resource('sqs', region_name=region, aws_access_key_id=AKIAQY7BMQIJP27UURXC, aws_secret_access_key=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)
+#sqs_client = boto3.client("sqs", region_name=region)
+sqs = boto3.resource('sqs', region_name=region)
 request_queue = sqs.get_queue_by_name(QueueName='project2_queue')
 
 dynamodb = boto3.resource('dynamodb', region_name=region)
@@ -79,7 +84,7 @@ def download_object(bucket_name, item, dest):
         if e.response['Error']['Code'] == '404':
             print('The video does not exist: s3://{}/{}'.format(bucket_name, item))
         else:
-            raise
+            raise e
     return True
 
 
@@ -155,5 +160,6 @@ def face_recognition_handler(event, context):
     # Uploading result to the SQS
     sqs_message = { "filename": key, "userid": response.item["userid"], "major": response.item["major"], "name": response.item["name"], "year": response.item["year"]}
     sqs_request_response = request_queue.send_message(MessageBody=json.dumps(sqs_message))
+
     print(queryobj)
     

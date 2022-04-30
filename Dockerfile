@@ -64,6 +64,11 @@ COPY entry.sh /
 COPY handler.py ${FUNCTION_DIR}
 RUN chmod 777 /entry.sh
 
+# Add model
+ADD models /home/app/models
+ADD build_custom_model.py /home/app/build_custom_model.py
+ADD .env /home/app/.env
+
 # Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
 # CMD [ "handler.handler" ]
 ENTRYPOINT [ "/entry.sh" ]
