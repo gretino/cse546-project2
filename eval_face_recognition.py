@@ -26,14 +26,14 @@ if __name__ == "__main__":
      # read labels
      with open(labels_dir) as f:
           labels = json.load(f)
-     print(f"labels: {labels}")
+     #print(f"labels: {labels}")
 
 
      device = torch.device('cpu')
      model = build_custom_model.build_model(len(labels)).to(device)
      model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu'))['model'])
      model.eval()
-     print(f"Best accuracy of the loaded model: {torch.load(model_path, map_location=torch.device('cpu'))['best_acc']}")
+     #print(f"Best accuracy of the loaded model: {torch.load(model_path, map_location=torch.device('cpu'))['best_acc']}")
 
 
      img = Image.open(img_path)
@@ -46,4 +46,5 @@ if __name__ == "__main__":
 
      img_name = img_path.split("/")[-1]
      img_and_result = f"({img_name}, {result})"
-     print(f"Image and its recognition result is: {img_and_result}")
+     #print(f"Image and its recognition result is: {img_and_result}")
+     print(result)
