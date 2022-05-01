@@ -25,10 +25,6 @@ load_dotenv()
 region = 'us-east-1'
 
 s3 = boto3.client('s3', region_name=region)
-
-
-#sqs = boto3.resource('sqs', region_name=region, aws_access_key_id=AKIAQY7BMQIJP27UURXC, aws_secret_access_key=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)
-#sqs_client = boto3.client("sqs", region_name=region)
 sqs = boto3.resource('sqs', region_name=region)
 request_queue = sqs.get_queue_by_name(QueueName='project2_queue')
 
