@@ -155,10 +155,12 @@ def face_recognition_handler(event, context):
     }
     # Query for matching records in dynamodb
     response = table.get_item(Key={'userid':tempdict[result]})
+    print(response)
     item = response['Item']
+    print(item)
 
     # Uploading result to the SQS
-    sqs_message = { "filename": key, "userid": response.item["userid"], "major": response.item["major"], "name": response.item["name"], "year": response.item["year"]}
+    sqs_message = { "filename": key, "userid": item["userid"], "major": item["major"], "name": item["name"], "year": response.item["year"]}
     sqs_request_response = request_queue.send_message(MessageBody=json.dumps(sqs_message))
 
     print(queryobj)
