@@ -149,9 +149,9 @@ def face_recognition_handler(event, context):
     #Using custom face recognition on student face
     result = fn_face_recognition(str(path) + 'image-001.png')
     tempdict = {
-        'Qiang'=2,
-        'Kiran'=3,
-        'Sreshta'=1
+        'Qiang':2,
+        'Kiran':3,
+        'Sreshta':1
     }
     # Query for matching records in dynamodb
     response = table.get_item(Key={'userid':tempdict[result]})
