@@ -68,7 +68,7 @@ RUN chmod 777 /entry.sh
 ADD models /home/app/models
 ADD build_custom_model.py /home/app/build_custom_model.py
 ADD .env /home/app/.env
-
+ADD checkpoint /home/app/checkpoint
 # Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
 # CMD [ "handler.handler" ]
 ENTRYPOINT [ "/entry.sh" ]

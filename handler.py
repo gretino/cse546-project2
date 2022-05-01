@@ -43,8 +43,8 @@ result = ''
 #face recognition function
 def fn_face_recognition(filename):
     
-     labels_dir = "./checkpoint/labels.json"
-     model_path = "./checkpoint/model_vggface2_best.pth"
+     labels_dir = "/home/app/checkpoint/labels.json"
+     model_path = "/home/app/checkpoint/model_vggface2_best.pth"
 
      # read labels
      with open(labels_dir) as f:
@@ -148,13 +148,13 @@ def face_recognition_handler(event, context):
 
     #Using custom face recognition on student face
     result = fn_face_recognition(str(path) + 'image-001.png')
-    
+    tempdict = {
+        'Qiang'=2,
+        'Kiran'=3,
+        'Sreshta'=1
+    }
     # Query for matching records in dynamodb
-    response = table.get_item(
-        Key={
-            'name': result
-        }
-    )
+    response = table.get_item(Key={'userid':tempdict[result]})
     item = response['Item']
 
     # Uploading result to the SQS
