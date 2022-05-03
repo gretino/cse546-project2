@@ -27,7 +27,7 @@ def camera_record():
 	camera.stop_recording()
 	camera.stop_preview()
 	camera.close()
-	threading.Thread(target = upload_to_aws, args=(filepath,'input-project2',filename)).start()
+	threading.Thread(target = upload_to_aws, args=(filepath,'ccproject-2',filename)).start()
 
 	
 while True:
