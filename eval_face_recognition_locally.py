@@ -15,7 +15,7 @@ def camera_record():
     camera = PiCamera()
     camera.resolution = (160, 160)
     filename = dt.datetime.now().strftime("%Y-%m-%d_%H.%M.%S.%f.jpg")
-    filepath = f'/home/pi/Desktop/temp/{filename}'
+    filepath = f'{folder_path}{filename}'
     camera.start_preview()
     sleep(3)
     camera.capture(filepath)
