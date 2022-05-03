@@ -3,6 +3,7 @@ from time import sleep
 import datetime as dt
 import os
 from dotenv import load_dotenv
+import subprocess
 
 load_dotenv()
 
@@ -17,7 +18,8 @@ def camera_record():
     camera.capture(filepath)
     camera.stop_preview()
     camera.close()
-    os.system(f'python eval_face_recognition.py --img_path "{filepath}"')
+    command = f'python eval_face_recognition.py --img_path "{filepath}"'
+    print(subprocess.check_output(command, shell=True))
 
 
 while True:
