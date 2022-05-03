@@ -17,4 +17,4 @@ while True:
 	if (x == ''):
 		camera_record()
 	else: 
-		continue
+		break
