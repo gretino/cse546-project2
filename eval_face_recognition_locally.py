@@ -17,12 +17,10 @@ def camera_record():
     filename = dt.datetime.now().strftime("%Y-%m-%d_%H.%M.%S.%f.jpg")
     filepath = f'{folder_path}{filename}'
     camera.start_preview()
-    sleep(3)
+    sleep(2)
     camera.capture(filepath)
     camera.stop_preview()
     camera.close()
-    command = f'python eval_face_recognition.py --img_path "{filepath}"'
-    print(subprocess.check_output(command, shell=True))
 
 
 while True:
