@@ -4,6 +4,7 @@ import datetime as dt
 
 def camera_record():
 	camera = PiCamera()
+	camera.resolution = (160, 160)
 	filename = dt.datetime.now().strftime("%Y-%m-%d_%H.%M.%S.jpg")
 	filepath = f'/home/pi/Desktop/{filename}'
 	camera.start_preview()
