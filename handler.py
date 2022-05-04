@@ -39,8 +39,8 @@ result = ''
 #face recognition function
 def fn_face_recognition(filename):
     
-     labels_dir = "/home/app/checkpoint/labels.json"
-     model_path = "/home/app/checkpoint/model_vggface2_best.pth"
+     labels_dir = "./checkpoint/labels.json"
+     model_path = "./checkpoint/model_vggface2_best.pth"
 
      # read labels
      with open(labels_dir) as f:
