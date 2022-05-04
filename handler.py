@@ -114,8 +114,8 @@ def face_recognition_handler(event, context):
 
     # Extracting frames from video using ffmpeg
     img_path = f'{str(path)}image-001.png'
-    os.system(f'ffmpeg -sseof -1 -i {str(video_file_path)} -update 1 -q:v 1 {img_path}'
-    )
+    os.system(f'ffmpeg -sseof -1 -i {str(video_file_path)} -update 1 -q:v 1 {img_path} -y'
+              )
 
     # Using the first image generated, read face_encoding
     # face_image = face_recognition.load_image_file(
