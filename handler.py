@@ -1,11 +1,10 @@
 import urllib.parse
 import boto3
-#import face_recognition
+# import face_recognition
 import pickle
 import os
-#import csv
 from botocore.exceptions import ClientError
-#from eval_face_recognition import fn_face_recognition
+# from eval_face_recognition import fn_face_recognition
 import torch
 import torchvision
 import torchvision.transforms as transforms
@@ -17,13 +16,12 @@ from urllib.request import urlopen
 from PIL import Image
 import json
 import numpy as np
-#import argparse
 import build_custom_model
 from dotenv import load_dotenv
+
 load_dotenv()
 
 region = 'us-east-1'
-
 s3 = boto3.client('s3', region_name=region)
 sqs = boto3.resource('sqs', region_name=region)
 request_queue = sqs.get_queue_by_name(QueueName='project2_queue')
@@ -32,37 +30,37 @@ dynamodb = boto3.resource('dynamodb', region_name=region)
 table = dynamodb.Table('Project2Table')
 
 input_bucket = 'input-project2'
-#output_bucket = 'output-project2'
+# output_bucket = 'output-project2'
 
 result = ''
 
-#face recognition function
+
+# face recognition function
 def fn_face_recognition(filename):
-    
-     labels_dir = "./checkpoint/labels.json"
-     model_path = "./checkpoint/model_vggface2_best.pth"
+    labels_dir = "./checkpoint/labels.json"
+    model_path = "./checkpoint/model_vggface2_best.pth"
 
-     # read labels
-     with open(labels_dir) as f:
-          labels = json.load(f)
-     #print(f"labels: {labels}")
+    # read labels
+    with open(labels_dir) as f:
+        labels = json.load(f)
+    # print(f"labels: {labels}")
 
-     device = torch.device('cpu')
-     model = build_custom_model.build_model(len(labels)).to(device)
-     model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu'))['model'])
-     model.eval()
-     #print(f"Best accuracy of the loaded model: {torch.load(model_path, map_location=torch.device('cpu'))['best_acc']}")
+    device = torch.device('cpu')
+    model = build_custom_model.build_model(len(labels)).to(device)
+    model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu'))['model'])
+    model.eval()
+    # print(f"Best accuracy of the loaded model: {torch.load(model_path, map_location=torch.device('cpu'))['best_acc']}")
 
-     #img = Image.open(img_path)
-     img = Image.open(filename)
-     img_tensor = transforms.ToTensor()(img).unsqueeze_(0).to(device)
-     outputs = model(img_tensor)
-     _, predicted = torch.max(outputs.data, 1)
-     result = labels[np.array(predicted.cpu())[0]]
-     print(result)
-     return result
+    # img = Image.open(img_path)
+    img = Image.open(filename)
+    img_tensor = transforms.ToTensor()(img).unsqueeze_(0).to(device)
+    outputs = model(img_tensor)
+    _, predicted = torch.max(outputs.data, 1)
+    result = labels[np.array(predicted.cpu())[0]]
+    print(result)
+    return result
 
-    
+
 # Function to read the 'encoding' file
 def open_encoding(filename):
     file = open(filename, 'rb')
@@ -87,7 +85,7 @@ def download_object(bucket_name, item, dest):
 def face_recognition_handler(event, context):
     # Listening bucket event
     global result
-    bucket = event['Records'][0]['s3']['bucket']['name']    
+    bucket = event['Records'][0]['s3']['bucket']['name']
 
     # Getting the item: video name e.g. test_1.mp4
     key = urllib.parse.unquote_plus(
@@ -115,43 +113,39 @@ def face_recognition_handler(event, context):
     download_object(bucket, key, video_file_path)
 
     # Extracting frames from video using ffmpeg
-    os.system(
-        'ffmpeg -i ' +
-        str(video_file_path) +
-        ' -r 1 ' +
-        str(path) +
-        'image-%3d.png' +
-        ' -loglevel 8'
+    img_path = f'{str(path)}image-001.png'
+    os.system(f'ffmpeg -sseof -1 -i {str(video_file_path)} -update 1 -q:v 1 {img_path}'
     )
 
     # Using the first image generated, read face_encoding
-    #face_image = face_recognition.load_image_file(
+    # face_image = face_recognition.load_image_file(
     #    str(path) + 'image-001.jpeg')
-    #face_encoding = face_recognition.face_encodings(face_image)[0]
+    # face_encoding = face_recognition.face_encodings(face_image)[0]
 
     # Read the 'encoding' file
-    #encoding_file = '/home/app/encoding'
-    #total_face_encoding = open_encoding(encoding_file)
+    # encoding_file = '/home/app/encoding'
+    # total_face_encoding = open_encoding(encoding_file)
 
     # For each known face, determine whether the current face matches it,
     # and the matching name is stored in the result
-    #for encoding in enumerate(total_face_encoding['encoding']):
+    # for encoding in enumerate(total_face_encoding['encoding']):
     #    match = face_recognition.compare_faces(
     #        [encoding[1]], face_encoding)
     #    if match[0]:
     #        result = total_face_encoding['name'][encoding[0]]
     #        break
 
-    #Using custom face recognition on student face
-    result = fn_face_recognition(str(path) + 'image-001.png')
+    # Using custom face recognition on student face
+    result = fn_face_recognition(img_path)
     tempdict = {
-        'Qiang':2,
-        'Kiran':3,
-        'Sreshta':1
+        'Qiang': 2,
+        'Kiran': 3,
+        'Sreshta': 1
     }
     # Query for matching records in dynamodb
-    response = table.get_item(Key={'userid':tempdict[result]})
+    response = table.get_item(Key={'userid': str(tempdict[result])})
     item = response['Item']
     # Uploading result to the SQS
-    sqs_message = { "filename": key, "userid": str(int(item["userid"])), "major": item["major"], "name": item["name"], "year": item["year"]}
-    sqs_request_response = request_queue.send_message(MessageBody=json.dumps(sqs_message)) 
+    sqs_message = {"filename": key, "userid": str(int(item["userid"])), "major": item["major"], "name": item["name"],
+                   "year": item["year"]}
+    sqs_request_response = request_queue.send_message(MessageBody=json.dumps(sqs_message))
