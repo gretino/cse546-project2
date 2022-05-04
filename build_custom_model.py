@@ -23,7 +23,8 @@ class normalize(nn.Module):
         return x
 
 def build_model(num_classes):
-    model_ft = InceptionResnetV1(pretrained='vggface2', classify=False, num_classes = num_classes)
+    model_ft = InceptionResnetV1(classify=False, num_classes = num_classes)
+    #model_ft = InceptionResnetV1(pretrained='vggface2', classify=False, num_classes = num_classes)
     last_conv_block = list(model_ft.children())[-6:]
     # print(last_conv_block)
 
