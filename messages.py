@@ -2,21 +2,22 @@ import boto3
 import time
 import datetime as dt
 import json
-
+from dotenv import load_dotenv
+load_dotenv()
 i=0
 sqs_client = boto3.client("sqs", region_name="us-east-1")
 
 def delete_message(receipt_handle):
     #print(receipt_handle)
     response = sqs_client.delete_message(
-        QueueUrl="https://sqs.us-east-1.amazonaws.com/053622899218/project2_queue",
+        QueueUrl="https://sqs.us-east-1.amazonaws.com/250982311839/project2_queue",
         ReceiptHandle=receipt_handle,
     )
 
 def receive_message():
 	message_body=''
 	response = sqs_client.receive_message(
-		QueueUrl='https://sqs.us-east-1.amazonaws.com/053622899218/project2_queue',
+		QueueUrl='https://sqs.us-east-1.amazonaws.com/250982311839/project2_queue',
 		MaxNumberOfMessages=1,
 		WaitTimeSeconds=2,)
 	for message in response.get("Messages", []):
