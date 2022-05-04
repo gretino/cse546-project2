@@ -18,6 +18,7 @@ import json
 import numpy as np
 import build_custom_model
 from dotenv import load_dotenv
+import pickle as pk
 
 load_dotenv()
 
@@ -46,8 +47,7 @@ def fn_face_recognition(filename):
     # print(f"labels: {labels}")
 
     device = torch.device('cpu')
-    model = build_custom_model.build_model(len(labels)).to(device)
-    model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu'))['model'])
+    # model = build_custom_model.build_model(len(labels)).to(device)
     model.eval()
     # print(f"Best accuracy of the loaded model: {torch.load(model_path, map_location=torch.device('cpu'))['best_acc']}")
 
