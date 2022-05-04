@@ -48,10 +48,13 @@ def fn_face_recognition(filename):
 
     device = torch.device('cpu')
     # model = build_custom_model.build_model(len(labels)).to(device)
+    # model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu'))['model'])
+    # with open('checkpoint/model.pk', 'wb') as pk_file:
+    #    pk.dump(model, pk_file)
+    with open('checkpoint/model.pk', 'rb') as pk_file:
+        model = pk.load(pk_file)
     model.eval()
-    # print(f"Best accuracy of the loaded model: {torch.load(model_path, map_location=torch.device('cpu'))['best_acc']}")
 
-    # img = Image.open(img_path)
     img = Image.open(filename)
     img_tensor = transforms.ToTensor()(img).unsqueeze_(0).to(device)
     outputs = model(img_tensor)
