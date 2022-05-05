@@ -37,8 +37,11 @@ while True:
         i = i + 1
         y = json.loads(json_data)
         print('-------------------------------')
-        print(f'The {i} person detected With original model: {y["name"]}, {y["major"]}, {y["year"]}')
-        print(f'The {i} person detected With original model: {y["name-model2"]}, {y["major-model2"]}, {y["year-model2"]}')
+        print(f'The {i} person detected With original provided model: {y["name"]}, {y["major"]}, {y["year"]}')
+        try:
+            print(f'The {i} person detected With Online model: {y["name-model2"]}, {y["major-model2"]}, {y["year-model2"]}')
+        except:
+            pass
         print('-------------------------------')
         start_time = y["filename"][:-5]
         # print(f'start_time: {start_time}, {type(start_time)}')
