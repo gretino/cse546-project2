@@ -1,6 +1,6 @@
 import urllib.parse
 import boto3
-# import face_recognition
+import face_recognition
 import pickle
 import os
 from botocore.exceptions import ClientError
