@@ -24,7 +24,7 @@ def imshow(inp, title=None):
     inp = std * inp + mean
     inp = np.clip(inp, 0, 1)
     plt.imshow(inp)
-    plt.imsave("show_data.png",inp)
+    plt.imsave("show_data.png", inp)
     if title is not None:
         plt.title(title)
     plt.pause(0.001)  # pause a bit so that plots are updated
@@ -38,12 +38,12 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
     for epoch in range(num_epochs):
         print('Epoch {}/{}'.format(epoch, num_epochs - 1))
         print('-' * 10)
-    # Each epoch has a training and validation phase
+        # Each epoch has a training and validation phase
         for phase in ['train', 'val']:
             if phase == 'train':
                 model.train()  # Set model to training mode
             else:
-                model.eval()   # Set model to evaluate mode
+                model.eval()  # Set model to evaluate mode
             running_loss = 0.0
             running_corrects = 0
             # Iterate over data.
@@ -63,7 +63,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
                         loss.backward()
                         optimizer.step()
                         scheduler.step()
-                
+
                 FT_losses.append(loss.item())
                 # statistics
                 running_loss += loss.item() * inputs.size(0)
@@ -75,7 +75,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
             if phase == 'val' and epoch_acc > best_acc:
                 best_acc = epoch_acc
                 best_model_wts = copy.deepcopy(model.state_dict())
-    
+
     time_elapsed = time.time() - since
     print(f'===>Training for {num_epochs} epochs completes in {time_elapsed // 60:.0f}m {time_elapsed % 60:.0f}s')
     print('===>Best val Acc: {:4f}'.format(best_acc))
@@ -84,21 +84,16 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
     return model, FT_losses, best_acc
 
 
-
 if __name__ == "__main__":
-
-
     parser = argparse.ArgumentParser(description='Train your customized face recognition model')
     parser.add_argument('--data_dir', type=str, default="./data/test_me", help='the path of the dataset')
     parser.add_argument('--num_epochs', type=int, default=100, help='training epochs')
     args = parser.parse_args()
 
-
     data_dir = args.data_dir
     num_epochs = args.num_epochs
-    labels_dir = "./checkpoint/labels.json" # the path to save labels
-    model_path = "./checkpoint/model_vggface2_best.pth" # the path to save best model weights
-
+    labels_dir = "./checkpoint/labels.json"  # the path to save labels
+    model_path = "./checkpoint/model_vggface2_best.pth"  # the path to save best model weights
 
     data_transforms = {
         'train': transforms.Compose([
@@ -113,11 +108,11 @@ if __name__ == "__main__":
     }
 
     image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x), data_transforms[x]) for x in ['train', 'val']}
-    dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=8, shuffle=True) for x in ['train', 'val']}
-    dataset_sizes = {x: len(image_datasets[x]) for x in ['train','val']}
+    dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=8, shuffle=True) for x in
+                   ['train', 'val']}
+    dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'val']}
     class_names = image_datasets['train'].classes
     print(f"Class names: {class_names}")
-
 
     # Get a batch of training data
     inputs, classes = next(iter(dataloaders['train']))
@@ -125,24 +120,21 @@ if __name__ == "__main__":
     out = utils.make_grid(inputs)
     imshow(out, title=[class_names[x] for x in classes])
 
-
     # device = torch.device('cuda:0')
     device = torch.device('cpu')
     model_ft = build_custom_model.build_model(len(class_names))
     model_ft = model_ft.to(device)
     print('Running on device: {}'.format(device))
 
-
     criterion = nn.CrossEntropyLoss()
     optimizer_ft = optim.SGD(model_ft.parameters(), lr=1e-2, momentum=0.9)
     # Decay LR by a factor of *gamma* every *step_size* epochs
     exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
 
-
     # train and evaluate
-    model_ft, FT_losses, best_acc = train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler, num_epochs=num_epochs)
+    model_ft, FT_losses, best_acc = train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler,
+                                                num_epochs=num_epochs)
 
-    
     # save labels and best model weights to checkpoint folder
     with open(labels_dir, 'w') as outfile:
         json.dump(class_names, outfile)
