@@ -61,7 +61,18 @@ def fn_face_recognition(filename):
     _, predicted = torch.max(outputs.data, 1)
     result = labels[np.array(predicted.cpu())[0]]
     print(result)
-    return result
+    with open('checkpoint/encodings.pk', 'rb') as picklefile:
+        known_face_encodings = pk.load(picklefile)
+    with open('checkpoint/labels.pk', 'rb') as picklefile:
+        known_label = pk.load(picklefile)
+    img = face_recognition.load_image_file(filename)
+    face_locations = face_recognition.face_locations(img)
+    face_encodings = face_recognition.face_encodings(img, face_locations)
+    for face_encoding in face_encodings:
+        face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
+        result2 = known_label[np.argmin(np.sum(face_distances, axis=1))]
+        print(result2)
+    return result, result2
 
 
 # Function to read the 'encoding' file
@@ -116,7 +127,7 @@ def face_recognition_handler(event, context):
     download_object(bucket, key, video_file_path)
 
     # Extracting frames from video using ffmpeg
-    img_path = f'{str(path)}image-001.png'
+    img_path = f'{str(path)}{key}.png'
     os.system(f'ffmpeg -sseof -1 -i {str(video_file_path)} -update 1 -q:v 1 {img_path} -y'
               )
 
@@ -139,7 +150,7 @@ def face_recognition_handler(event, context):
     #        break
 
     # Using custom face recognition on student face
-    result = fn_face_recognition(img_path)
+    result, result2 = fn_face_recognition(img_path)
     tempdict = {
         'Qiang': 2,
         'Kiran': 3,
@@ -147,8 +158,14 @@ def face_recognition_handler(event, context):
     }
     # Query for matching records in dynamodb
     response = table.get_item(Key={'userid': str(tempdict[result])})
+    response2 = table.get_item(Key={'userid': str(tempdict[result2])})
     item = response['Item']
+    item2 = response2['Item']
     # Uploading result to the SQS
-    sqs_message = {"filename": key, "userid": str(int(item["userid"])), "major": item["major"], "name": item["name"],
-                   "year": item["year"]}
+    sqs_message = {"filename": key,
+                   "userid": str(int(item["userid"])), "major": item["major"],
+                   "name": item["name"], "year": item["year"],
+                   "userid-model2": str(int(item2["userid"])), "major-model2": item2["major"],
+                   "name-model2": item2["name"], "year-model2": item2["year"]}
     sqs_request_response = request_queue.send_message(MessageBody=json.dumps(sqs_message))
+
