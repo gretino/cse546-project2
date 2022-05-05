@@ -14,3 +14,4 @@ opencv-python
 ffmpeg
 botocore
 awslambdaric
+face_recognition
