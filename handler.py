@@ -34,6 +34,7 @@ input_bucket = 'input-project2'
 # output_bucket = 'output-project2'
 
 result = ''
+result2 = ''
 
 
 # face recognition function
@@ -99,6 +100,7 @@ def download_object(bucket_name, item, dest):
 def face_recognition_handler(event, context):
     # Listening bucket event
     global result
+    global result2
     bucket = event['Records'][0]['s3']['bucket']['name']
 
     # Getting the item: video name e.g. test_1.mp4
