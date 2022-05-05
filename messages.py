@@ -36,7 +36,10 @@ while True:
         # print(json_data)
         i = i + 1
         y = json.loads(json_data)
-        print(f'The {i} person detected: {y["name"]}, {y["major"]}, {y["year"]}')
+        print('-------------------------------')
+        print(f'The {i} person detected With original model: {y["name"]}, {y["major"]}, {y["year"]}')
+        print(f'The {i} person detected With original model: {y["name-model2"]}, {y["major-model2"]}, {y["year-model2"]}')
+        print('-------------------------------')
         start_time = y["filename"][:-5]
         # print(f'start_time: {start_time}, {type(start_time)}')
         time_format = time.strptime(start_time, '%Y-%m-%d_%H.%M.%S.%f')
